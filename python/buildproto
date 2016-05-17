@@ -1,0 +1,1 @@
+protoc -I=../interface --python_out=. ../interface/addressbook.proto
