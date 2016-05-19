@@ -1,4 +1,11 @@
 from flask import Flask
+import flask
+import sys
+import hashlib
+import traceback
+
+import addressbook_pb2
+from addressbook_pb2 import Person
 
 app = Flask(__name__)
 
@@ -6,7 +13,29 @@ app = Flask(__name__)
 def hello():
     return "Hello world"
 
-import addressbook_pb2
+
+@app.route("/person", methods=['POST'])
+def add_person():
+    ACCEPTED="{'transaction': 'Accepted'}"
+    REJECTED="{'transaction': 'Rejected'}"
+    data = flask.request.get_data()
+    if data:
+        try:
+            person = Person()
+            person.ParseFromString(data)
+        except:
+            print "Exception"
+            traceback.print_exc()
+            return REJECTED
+        print "Received..."
+        print person
+        return ACCEPTED
+    else:
+        return REJECTED
+
+        
+    
+
 address_book = addressbook_pb2.AddressBook()
 person = address_book.person.add()
 
